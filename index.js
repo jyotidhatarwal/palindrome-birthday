@@ -39,6 +39,7 @@ function convertNumberDateToStringDate(date){
 }
 
 function listAllVariationOfDate(date){
+    date = convertNumberDateToStringDate(date);
     const ddmmyyyy = date.day + date.month + date.year;
     const mmddyyyy = date.month + date.day + date.year;
     const yyyymmdd = date.year + date.month + date.day;
@@ -109,6 +110,20 @@ function getNextDate(date){
     }
 }
 
+function nextPalindromeDate(date){
+    var counter =0;
+    var nextDate = getNextDate(date);
+    while(true){
+        counter++;
+        var palindrome = checkPalindromeForAllFormats(nextDate);
+        if(palindrome){
+            break;
+        }
+        nextDate = getNextDate(nextDate);
+    }
+    return [counter,nextDate];
+}
+
 
 var date = {
     day: 22,
@@ -117,7 +132,30 @@ var date = {
 }
 
 function clickHandler(){
-    console.log("clicked");
+    var birthdayStr = inputDate.value;
+
+    if(birthdayStr !== ''){
+        var formatedDate  = birthdayStr.split("-");
+        var date = {
+            day: Number(formatedDate[2]),
+            month: Number(formatedDate[1]),
+            year: Number(formatedDate[0])
+        };
+        var isPalindrome = checkPalindromeForAllFormats(date);
+        if(isPalindrome){
+            showMessage("Yay! 🥳 your birthday is a Palindrome","Green");
+        }else{
+            var [counter,nextDate] = nextPalindromeDate(date);
+            showMessage(`Next Palindrome date is ${nextDate.day}-${nextDate.month}-${nextDate.year}, you missed it by ${counter} days 🤪`,"red");
+        }
+    }else{
+        showMessage("Please select a date from the date picker","black");
+    }
+}
+
+function showMessage(message,color){
+    outputMessage.style.color = color;
+    outputMessage.innerText = message;
 }
 
 showButton.addEventListener("click",clickHandler);
